@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import TestComponent from "../TestComponent";
-import ClassComponent from "../ClassComponents";
+// import ClassComponent from "../ClassComponents";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <TestComponent name="Jac" />
-        <ClassComponent name="Jacque" />
+        {/* <ClassComponent name="Jacque" /> */}
 
         <a
           className="App-link"

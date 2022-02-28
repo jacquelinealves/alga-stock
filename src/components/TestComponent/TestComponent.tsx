@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./TestComponent.css";
 
 type TestComponentProps = {
@@ -7,6 +7,11 @@ type TestComponentProps = {
 
 export default function TestComponent({ name }: TestComponentProps) {
   const [age, setAge] = useState<number>(32);
+
+  useEffect(() => {
+    // console.log("Component was created");
+    console.log("Age has been updated to: " + age);
+  }, [age]);
 
   return (
     <div className="TestComponent">

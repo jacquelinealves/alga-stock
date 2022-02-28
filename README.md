@@ -36,3 +36,7 @@ Permite trabalhar com estado dentro de componentes funcionais.
 
 - useState
   `const[getter, setter] = useState<type>(initialValue)`
+
+- useEffect
+  só é executado depois que o componente é renderizado
+  possui uma lista de dependências, observando o estado e reagindo a alterações em determinados estados.
