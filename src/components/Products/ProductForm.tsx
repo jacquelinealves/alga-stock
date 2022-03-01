@@ -9,47 +9,68 @@ export const initialFormState = {
   stock: "",
 };
 
-const ProductForm = () => {
-  // function handleSubmitForm(data: any) {
-  //   console.log(data);
-  // }
+export interface ProductCreator {
+  name: string;
+  price: number;
+  stock: number;
+}
 
-  const [form, setForm] = useState<any>(initialFormState);
+declare interface ProductFormProps {
+  onSubmit: (product: ProductCreator) => void;
+}
+
+const ProductForm: React.FC<ProductFormProps> = (props) => {
+  const [form, setForm] = useState(initialFormState);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // event.target.name //se refere a qual input está sendo executado
-    const { value, name } = event.target;
+    const { value, name } = event.target; //se refere a qual input está sendo executado
     setForm({
       ...form,
       [name]: value,
     });
   };
 
+  const handleFormSubmit = () => {
+    const productDto = {
+      //DTO - acrônico para Data Transfer Object
+      name: String(form.name),
+      price: parseFloat(form.price),
+      stock: Number(form.stock),
+    };
+
+    props.onSubmit(productDto);
+    setForm(initialFormState);
+  };
+
   return (
-    <Form title="Product Form" onSubmit={() => console.log(form)}>
+    <Form title="Product Form" onSubmit={handleFormSubmit}>
       <Input
-        label="Name"
-        placeholder="E.g.: Cookie"
         onChange={handleInputChange}
         name="name"
+        value={form.name}
+        label="Name"
+        placeholder="E.g.: Cookie"
         required
       />
       <Input
+        onChange={handleInputChange}
+        value={form.price}
+        name="price"
         label="Price"
         type="number"
         step="0.01"
         min="0"
         placeholder="E.g.: 1.25"
-        onChange={handleInputChange}
-        name="price"
         required
       />
       <Input
+        onChange={handleInputChange}
+        value={form.stock}
+        name="stock"
         label="Stock"
         type="number"
         min="0"
         placeholder="E.g.: 15"
-        onChange={handleInputChange}
-        name="stock"
         required
       />
       <Button>Submit</Button>
