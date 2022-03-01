@@ -1,5 +1,5 @@
 import React from "react";
-import "./input.css";
+import "./input.scss";
 
 declare interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

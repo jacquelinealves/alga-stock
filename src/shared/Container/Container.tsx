@@ -1,5 +1,5 @@
 import React from "react";
-import "./container.css";
+import "./container.scss";
 
 const Container: React.FC = (props) => {
   return <div className="AppContainer">{props.children}</div>;
