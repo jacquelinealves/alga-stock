@@ -1,7 +1,8 @@
 import Header from "../Header";
 import Container from "../../shared/Container";
-import Table, { TableHeader } from "../../shared/Table";
 import Products from "../../shared/Table/table.mock";
+import Table, { TableHeader } from "../../shared/Table";
+import ProductForm from "../Products/ProductForm";
 
 const headers: TableHeader[] = [
   { key: "id", value: "#" },
@@ -18,6 +19,8 @@ function App() {
 
       <Container>
         <Table headers={headers} data={Products} />
+
+        <ProductForm />
       </Container>
     </div>
   );
