@@ -1,25 +1,24 @@
-import logo from "./logo.svg";
-import "./App.css";
-import TestComponent from "../TestComponent";
-// import ClassComponent from "../ClassComponents";
+import Header from "../Header";
+import Container from "../../shared/Container";
+import Table, { TableHeader } from "../../shared/Table";
+import Products from "../../shared/Table/table.mock";
+
+const headers: TableHeader[] = [
+  { key: "id", value: "#" },
+  { key: "name", value: "Product" },
+  { key: "price", value: "Price", right: true },
+  { key: "stock", value: "Available Stock", right: true },
+  { key: "actions", value: "Actions" },
+];
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <TestComponent name="Jac" />
-        {/* <ClassComponent name="Jacque" /> */}
+      <Header title="AlgaStock" />
 
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Container>
+        <Table headers={headers} data={Products} />
+      </Container>
     </div>
   );
 }

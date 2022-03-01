@@ -1,0 +1,29 @@
+.AppInput {
+  height: 45px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      color: #09f;
+      font-size: 0.8em;
+      height: 15px;
+      letter-spacing: 0.75px;
+      text-transform: uppercase;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid #ccc;
+      border-radius: 0; /* fix edge's default border-radius */
+      color: #222;
+      height: 30px;
+
+      &:focus {
+        border-color: #09f;
+        outline: none;
+      }
+    }
+  }
+}
