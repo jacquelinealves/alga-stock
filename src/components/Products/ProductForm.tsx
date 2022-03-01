@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "../../shared/Form";
 import Input from "../../shared/Input";
 import Button from "../../shared/Button";
+import { Product } from "../../shared/Table/table.mock";
 
-export const initialFormState = {
-  name: "",
-  price: "",
-  stock: "",
-};
+declare interface InitialFormState {
+  id?: number;
+  name: string;
+  price: string;
+  stock: string;
+}
 
 export interface ProductCreator {
   name: string;
@@ -16,11 +18,30 @@ export interface ProductCreator {
 }
 
 declare interface ProductFormProps {
-  onSubmit: (product: ProductCreator) => void;
+  form?: Product;
+  onSubmit?: (product: ProductCreator) => void; // ProductCreator não tem ID
+  onUpdate?: (product: Product) => void; // Product tem um ID por atualizar um produto já existente
 }
 
 const ProductForm: React.FC<ProductFormProps> = (props) => {
+  const initialFormState: InitialFormState = props.form
+    ? {
+        id: props.form.id,
+        name: props.form.name,
+        price: String(props.form.price),
+        stock: String(props.form.stock),
+      }
+    : {
+        name: "",
+        price: "",
+        stock: "",
+      };
+
   const [form, setForm] = useState(initialFormState);
+
+  useEffect(() => {
+    setForm(initialFormState);
+  }, [props.form]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target; //se refere a qual input está sendo executado
@@ -30,15 +51,29 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
     });
   };
 
-  const handleFormSubmit = () => {
+  const updateProduct = (product: InitialFormState) => {
+    //DTO - acrônico para Data Transfer Object
     const productDto = {
-      //DTO - acrônico para Data Transfer Object
-      name: String(form.name),
-      price: parseFloat(form.price),
-      stock: Number(form.stock),
+      id: Number(product.id),
+      name: String(product.name),
+      price: parseFloat(product.price),
+      stock: Number(product.stock),
     };
+    props.onUpdate && props.onUpdate(productDto);
+  };
 
-    props.onSubmit(productDto);
+  const createProduct = (product: InitialFormState) => {
+    //DTO - acrônico para Data Transfer Object
+    const productDto = {
+      name: String(product.name),
+      price: parseFloat(product.price),
+      stock: Number(product.stock),
+    };
+    props.onSubmit && props.onSubmit(productDto);
+  };
+
+  const handleFormSubmit = () => {
+    form.id ? updateProduct(form) : createProduct(form);
     setForm(initialFormState);
   };
 
@@ -73,7 +108,7 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
         placeholder="E.g.: 15"
         required
       />
-      <Button>Submit</Button>
+      <Button>{form.id ? "Update" : "Submit"}</Button>
     </Form>
   );
 };
