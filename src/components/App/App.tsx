@@ -1,59 +1,68 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import Header from "../Header";
 import Container from "../../shared/Container";
 import Table, { TableHeader } from "../../shared/Table";
-import Products, { Product } from "../../shared/Table/table.mock";
+import { Product } from "../../shared/Table/table.mock.data";
 import ProductForm, { ProductCreator } from "../Products/ProductForm";
-import Swal from "sweetalert2";
+import {
+  getAllProducts,
+  createSingleProduct,
+  updateSingleProduct,
+  deleteSingleProduct,
+} from "../../services/Products.service";
 
 const headers: TableHeader[] = [
-  { key: "id", value: "#" },
+  { key: "_id", value: "Product ID" },
   { key: "name", value: "Product" },
   { key: "price", value: "Price", right: true },
   { key: "stock", value: "Available Stock", right: true },
 ];
 
 function App() {
-  const [products, setProducts] = useState<any>(Products);
+  const [products, setProducts] = useState<Product[]>([]);
   const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(
-    products[0]
+    undefined
   );
 
-  const handleFormSubmit = (product: ProductCreator) => {
-    setProducts([
-      ...products,
-      {
-        id: products.length + 1,
-        ...product,
-      },
-    ]);
+  async function fetchData() {
+    const _products = await getAllProducts();
+    setProducts(_products);
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleProductSubmit = async (product: ProductCreator) => {
+    try {
+      await createSingleProduct(product);
+      fetchData();
+    } catch (err: any) {
+      Swal.fire("Oops!", err.message, "error");
+    }
   };
 
-  const handleProductUpdate = (newProduct: Product) => {
-    setProducts(
-      products.map((product: any) =>
-        product.id === newProduct.id ? newProduct : product
-      )
-    );
-
-    setUpdatingProduct(undefined);
+  const handleProductUpdate = async (newProduct: Product) => {
+    try {
+      await updateSingleProduct(newProduct);
+      setUpdatingProduct(undefined);
+      fetchData();
+    } catch (err: any) {
+      Swal.fire("Oops!", err.message, "error");
+    }
   };
 
-  const handleProductEdit = (product: Product) => {
-    setUpdatingProduct(product);
+  const deleteProduct = async (id: string) => {
+    try {
+      await deleteSingleProduct(id);
+      fetchData();
+      Swal.fire("Uhul!", "Product successfully deleted", "success");
+    } catch (err: any) {
+      Swal.fire("Oops!", err.message, "error");
+    }
   };
 
-  const handleProductDetail = (product: Product) => {
-    Swal.fire(
-      "Product details",
-      `${product.name} costs $${product.price}. We have ${product.stock} available in stock`,
-      "question"
-    );
-  };
-
-  const deleteProduct = (id: number) => {
-    setProducts(products.filter((product: any) => product.id !== id));
-  };
   const handleProductDelete = (product: Product) => {
     Swal.fire({
       title: "Are you sure?",
@@ -62,19 +71,29 @@ function App() {
       showCancelButton: true,
       confirmButtonColor: "#09f",
       cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, delete ${product.name}`,
+      confirmButtonText: `Yes, delete ${product.name}!`,
     }).then((result) => {
-      if (result.isConfirmed) {
-        deleteProduct(product.id);
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      if (result.value) {
+        deleteProduct(product._id);
       }
     });
+  };
+
+  const handleProductDetail = (product: Product) => {
+    Swal.fire(
+      "Product details",
+      `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
+      "info"
+    );
+  };
+
+  const handleProductEdit = (product: Product) => {
+    setUpdatingProduct(product);
   };
 
   return (
     <div className="App">
       <Header title="AlgaStock" />
-
       <Container>
         <Table
           headers={headers}
@@ -87,7 +106,7 @@ function App() {
 
         <ProductForm
           form={updatingProduct}
-          onSubmit={handleFormSubmit}
+          onSubmit={handleProductSubmit}
           onUpdate={handleProductUpdate}
         />
       </Container>

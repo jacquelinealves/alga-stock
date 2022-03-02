@@ -45,3 +45,40 @@ Permite trabalhar com estado dentro de componentes funcionais.
 React Functional Componente
 
 Componentes reagem aos estados e propriedades
+
+### Fetch API
+
+Requisições
+
+```
+fetch('https://jsonplaceholder.typicode.com/posts', {
+   method: 'POST',
+   body: JSON.stringify({
+      userId: 1,
+      title: 'hello, world',
+      body: 'I am a cool post.'
+   }),
+   headers: {
+      'Content-type': 'application/json'
+   }
+})
+   .then(res => res.json())
+```
+
+### Axios
+
+Biblioteca de requisições HTTP
+
+### Mock Server
+
+Não persiste dados.
+
+Ajuda a testar cada unidade de requisição que é enviada.
+
+### Open API
+
+Documentação de como uma API deve se comportar.
+
+Precisa SER: primordialmente fiel ao produto final.
+
+(Prism)[https://github.com/stoplightio/prism]
